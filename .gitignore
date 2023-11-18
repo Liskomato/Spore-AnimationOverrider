@@ -402,3 +402,4 @@ FodyWeavers.xsd
 *.sporemod
 *.zip
 *.dll
+config.properties
