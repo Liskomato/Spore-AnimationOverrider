@@ -1,5 +1,6 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
+#include "cAnimationOverrideManager.h"
 
 void Initialize()
 {
@@ -10,55 +11,41 @@ void Initialize()
 	//  - Add new game modes
 	//  - Add new space tools
 	//  - Change materials
+	AnimationOverrideManager.ReadProperties();
 }
 
 
 
 	virtual_detour(anim_override_detour, Anim::AnimatedCreature, Anim::AnimatedCreature, void(uint32_t, int*)) {    
 		void detoured(uint32_t animID, int* pChoice) {
-			PropertyListPtr propList; // .prop file for the animation ID
-			uint32_t newID;			  // ID that we will override the old value with.
-			uint32_t* modes;	      // Array of game mode IDs override will activate in.
-			size_t modes_size;        // Size of game mode ID array
-			bool requireAvatar;       // Require avatar for the override
-			int* choice = pChoice;    // animation ID choice.
 
-			/// 
-			/// First check that the prop file with the same ID as our original animation exists in AnimationOverrides.
-			/// overrideWith is the new ID we use instead in this detour, and it is required to exist for the override to work.
-			/// forceChoice is optional but it can help to force a specific animation choice in the new animation.
-			/// requireAvatar makes sure only the avatar is the one whose animations are overwritten with this override in particular.
-			/// modes is the list of valid game mode IDs that trigger the override (optional)
-			/// 
-			if (PropManager.GetPropertyList(animID, id("AnimationOverrides"), propList) &&
-				propList->HasProperty(id("overrideWith")) &&
-				App::Property().GetUInt32(propList.get(), id("overrideWith"), newID)) {
-				App::Property().GetInt32(propList.get(), id("forceChoice"), *choice);
-				if (App::Property().GetBool(propList.get(),id("requireAvatar"),requireAvatar) && requireAvatar && 
-					GameNounManager.GetAvatar() != nullptr && this != GameNounManager.GetAvatar()->mpAnimatedCreature.get()) {
+			if (AnimationOverrideManager.overrides.find(animID) == AnimationOverrideManager.overrides.end()) {
+				original_function(this, animID, pChoice);
+			}
+			else {
+				AnimationOverride overrider = AnimationOverrideManager.overrides[animID];
+				if (overrider.requireAvatar && GameNounManager.GetAvatar() != nullptr && this != GameNounManager.GetAvatar()->mpAnimatedCreature.get()) {
 					original_function(this, animID, pChoice);
 				}
-				else if (App::Property().GetArrayUInt32(propList.get(),id("modes"),modes_size,modes)) {
-					bool matchID = false;
-					for (int i = 0; i < modes_size; i++) {
-						if (modes[i] == GameModeManager.GetActiveModeID()) {
-							matchID = true;
+				else if (overrider.modes_size != 0) {
+					bool foundModeID = false;
+					for (int i = 0; i < overrider.modes_size; i++) {
+						if (overrider.modes[i] == GameModeManager.GetActiveModeID()) {
+							foundModeID = true;
 							break;
 						}
 					}
-					if (matchID) {
-						original_function(this, newID,choice);
+					if (foundModeID) {
+						original_function(this, overrider.newID, &overrider.choice);
 					}
 					else {
-						original_function(this, animID,pChoice);
+						original_function(this, animID, pChoice);
 					}
 				}
 				else {
-					original_function(this, newID, choice);
+					original_function(this, overrider.newID, &overrider.choice);
 				}
-			}
-			else {
-				original_function(this, animID, pChoice);
+				
 			}
 		}
 
@@ -67,6 +54,7 @@ void Initialize()
 void Dispose()
 {
 	// This method is called when the game is closing
+	AnimationOverrideManager.Dispose();
 }
 
 void AttachDetours()
