@@ -19,6 +19,12 @@
     <ClInclude Include="stdafx.h">
       <Filter>Internal</Filter>
     </ClInclude>
+    <ClInclude Include="cAnimationOverrideManager.h">
+      <Filter>AnimationOverrider</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationOverride.h">
+      <Filter>AnimationOverrider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -26,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimationOverrideManager.cpp">
+      <Filter>AnimationOverrider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

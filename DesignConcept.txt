@@ -1,7 +1,7 @@
-AnimationOverrider!animID_override.tlsa
+AnimationOverrides!animID_override.tlsa
 A tlsa file containing single animation entry. The overriding animation requires a custom ID so as to not completely override the old animation and to avoid ID conflicts. For most cases the TLSA filename shouldn't matter as the game should read all of them anyway. Same tlsa can also contain multiple animation entries with their own IDs. In fact that is also how Spore and GA handle their own TLSA entries as well, both have most of their animations inside the same file.
 
-AnimationOverrider!animID_original.prop
+AnimationOverrides!animID_original.prop
 Property list processed by the Animation Overrider mod to replace the animation being overridden. Its instance ID must be the same as the animation ID you want to override. The file can contain the following properties as an example:
 
 uint32 overrideWith # The new animation ID that will be loaded instead. It can either be an existing vanilla animation or one added with a mod.

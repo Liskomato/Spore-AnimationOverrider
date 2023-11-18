@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "cAnimationOverrideManager.h"
 
+cAnimationOverrideManager* cAnimationOverrideManager::ptr = nullptr;
+
 cAnimationOverrideManager::cAnimationOverrideManager()
 {
 }

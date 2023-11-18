@@ -1,0 +1,6 @@
+uint32 overrideWith 0xE95AEA61
+bool requireAvatar true
+uint32s modes
+    0x01654C05
+    0x01654C10
+end
