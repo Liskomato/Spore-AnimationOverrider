@@ -1,4 +1,4 @@
-<mod displayName="Animation Overrider" unique="AnimationOverrider" description="A mod that makes it easier to override existing animations in Spore." installerSystemVersion="1.0.2.0" hasCustomInstaller="true" dllsBuild="2.5.288">
+<mod displayName="Animation Overrider" unique="AnimationOverrider" description="A mod that makes it easier to override existing animations in Spore." installerSystemVersion="1.0.1.2" hasCustomInstaller="true" dllsBuild="2.5.288">
 <component unique="CaptainIdleOverride" displayName="Captain Idle Animation Override" description="Example mod that uses Animation Overrider. Replaces the captain's 'lookaround' idle animation with a range of others while in adventures or while using Hologram Scout." game="GalacticAdventures" defaultChecked="true">CaptainIdleOverride.package</component>
 <prerequisite>AnimationOverrider.dll</prerequisite>
 <remove game="GalacticAdventures">NewCaptainIdleAnimation*</remove>
